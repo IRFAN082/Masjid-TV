@@ -1,0 +1,54 @@
+# Masjid TV — Paparan Masjid (Android TV)
+
+Skrin paparan masjid untuk TV Android, satu fail `app/src/main/assets/index.html` dibungkus dalam WebView.
+
+## Fungsi
+- **Waktu solat JAKIM** (e-Solat, ikut kod zon) — dimuat turun setahun sekali, simpan dalam TV, tetap jalan jika internet putus.
+- **Kiraan detik solat seterusnya**; kotak bertukar emas & berdenyut bila tinggal ≤ 5 minit sebelum masuk waktu.
+- **Animasi waktu solat** (skrin penuh):
+  1. 60 saat terakhir sebelum masuk waktu — cincin kiraan detik.
+  2. Masuk waktu — skrin azan (bintang berputar, gelang cahaya, nama waktu emas) selama 3 minit (boleh ubah).
+  3. Iqamah — cincin kiraan detik 5 minit (boleh ubah setiap waktu); minit terakhir jadi jingga + animasi saf "Luruskan dan rapatkan saf".
+  4. "Solat sedang berlangsung" (gelap, minta matikan telefon). Hari Jumaat: skrin khutbah.
+- **Slide gambar masjid** skrin penuh: jam besar, tarikh Masihi/Hijrah, 5 waktu, kiraan ke solat seterusnya, ayat; 13 gambar masjid (Wikimedia Commons, kredit dipapar) bergilir.
+- **Slide automatik**: Tarikh Hijrah (Rumi + Jawi), Jadual Kuliah (hari ini ditanda), Kutipan Tabung mingguan (+ perbandingan minggu lepas), Ayat Al-Quran (10 ayat, teks Arab + terjemahan Kemenag RI).
+- **Poster kuliah**: gambar dalam folder bernama `Poster` dipapar sebagai slide (2 kali setiap pusingan, bergilir).
+- Teks bergerak untuk pengumuman. Hidup sendiri bila TV dibuka; skrin tidak tidur.
+
+## Kawal dari telefon
+Tekan **MENU** pada remote → imbas **kod QR** di penjuru kanan atas dengan kamera telefon (telefon mesti guna Wi-Fi yang sama dengan TV).
+Halaman telefon boleh: ubah kutipan tabung (ada butang "Minggu baharu"), muat naik / padam poster dari galeri, edit jadual kuliah,
+pengumuman, nama masjid, zon, minit iqamah, dan **uji animasi azan & iqamah** di TV.
+Dilindungi PIN 6 digit (dipapar di TV); 10 cubaan salah = dikunci 5 minit.
+
+## Tetapan (guna remote)
+Tekan **MENU** (atau **OK 3 kali** dengan cepat). ▲▼ untuk bergerak, OK untuk menaip, BACK untuk tutup.
+Boleh ubah: nama masjid, zon JAKIM, minit iqamah, tempoh solat, kutipan tabung, jadual kuliah, teks bergerak.
+
+## Tambah poster kuliah
+Simpan gambar (JPG/PNG, sebaiknya potret 4:5 atau landskap 16:9) dalam folder bernama **`Poster`**. Ada 3 cara:
+1. **Pendrive** — buat folder `Poster` dalam pendrive, masukkan poster, cucuk ke TV. Cabut pendrive = poster hilang dari slide.
+2. **Dari komputer (Wi-Fi)** — `./poster.sh <IP-TV> poster1.jpg poster2.jpg`; `--senarai` untuk lihat, `--padam-semua` untuk buang.
+3. **Pautan internet** — dalam Tetapan, isi "Pautan poster" (satu URL gambar setiap baris).
+
+Poster baharu muncul dalam pusingan slide seterusnya. Kali pertama app dibuka, benarkan akses gambar bila TV bertanya.
+
+## Pasang
+```
+./install.sh <IP-TV>
+```
+Atau salin `dist/PaparanMasjid.apk` ke pendrive dan pasang guna file manager di TV.
+
+## Bina semula
+```
+export JAVA_HOME=~/glass-tv-sdk/jdk-17.0.20.1+1/Contents/Home ANDROID_HOME=~/glass-tv-sdk/sdk
+./gradlew assembleRelease && cp app/build/outputs/apk/release/app-release.apk dist/PaparanMasjid.apk
+```
+Uji di browser: buka `index.html?now=2026-10-22T16:12:00` untuk lompat ke masa tertentu, atau `index.html?demo=1` untuk demo animasi (±1 minit).
+
+## Kredit
+- Waktu solat & tarikh Hijrah: [JAKIM e-Solat](https://www.e-solat.gov.my).
+- Teks ayat: quran.com (edisi Imla'ei); terjemahan: *Al-Qur'an dan Terjemahannya*, Kemenag RI — diambil melalui quran.ai.
+- Fon ayat: [Amiri Quran](https://github.com/aliftype/amiri) (SIL OFL 1.1, lihat `app/src/main/assets/fonts/AMIRI-LICENSE-OFL.txt`).
+- Gambar masjid: Wikimedia Commons; jurugambar dan lesen setiap gambar dalam `app/src/main/assets/masjid/captions.json` dan dipapar di skrin.
+- Kod QR: [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) oleh Kazuhiko Arase (MIT).

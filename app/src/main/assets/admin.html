@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b3f2f">
+<title>Kawalan Paparan Masjid</title>
+<style>
+:root{--bg:#f4f1e8;--card:#fff;--ink:#1d2b25;--mute:#6b7b73;--line:#e3ddcb;--green:#0f5a40;--green2:#0b3f2f;--gold:#c99a2e;--red:#b4432f}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:16px;padding-bottom:96px}
+header{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;padding:20px 16px 18px}
+header h1{font-size:20px;color:#f1d27a}
+header p{font-size:13px;opacity:.8;margin-top:2px}
+main{max-width:640px;margin:0 auto;padding:12px 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:14px}
+.card h2{font-size:16px;color:var(--green);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:13px;color:var(--mute);margin:10px 0 4px}
+input,textarea,select{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fbfaf6;color:var(--ink)}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);border-color:transparent}
+textarea{min-height:84px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.iq{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.iq label{text-align:center;margin-top:0;font-size:12px}
+.iq input{text-align:center;padding:10px 4px}
+.hint{font-size:12px;color:var(--mute);margin-top:6px}
+.btn{font:inherit;font-size:15px;font-weight:600;border:0;border-radius:10px;padding:12px 16px;background:var(--green);color:#fff;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--green);border:1px solid var(--green)}
+.btn.gold{background:var(--gold);color:#fff}
+.btn:disabled{opacity:.5}
+.k{border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:10px;position:relative;background:#fdfcf8}
+.k .row{grid-template-columns:120px 1fr}
+.k .x{position:absolute;top:6px;right:6px;width:30px;height:30px;border-radius:50%;border:0;background:#f3e6e2;color:var(--red);font-size:16px}
+.k label{margin-top:6px}
+.posters{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.posters .p{position:relative;aspect-ratio:4/5;border-radius:10px;overflow:hidden;background:#eee;border:1px solid var(--line)}
+.posters img{width:100%;height:100%;object-fit:cover}
+.posters .x{position:absolute;top:4px;right:4px;width:30px;height:30px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:15px}
+.drop{display:block;border:2px dashed var(--gold);border-radius:12px;padding:18px;text-align:center;color:var(--gold);font-weight:600;cursor:pointer}
+.drop input{display:none}
+.actions{display:grid;gap:10px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:flex;gap:10px;justify-content:center}
+.bar .btn{flex:1;max-width:320px}
+#toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#1d2b25;color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;display:none;max-width:90%;text-align:center;z-index:9}
+#login{max-width:360px;margin:12vh auto;padding:0 16px;text-align:center}
+#login h1{font-size:22px;color:var(--green)}
+#login p{color:var(--mute);margin:8px 0 18px;font-size:14px}
+#login input{text-align:center;font-size:28px;letter-spacing:.3em}
+#login .btn{width:100%;margin-top:12px}
+.hide{display:none!important}
+.tab{font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+
+<section id="login" class="hide">
+  <h1>🕌 Paparan Masjid</h1>
+  <p>Masukkan PIN yang dipaparkan di TV<br>(tekan MENU pada remote TV)</p>
+  <input id="pinIn" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+  <button class="btn" id="pinGo">Masuk</button>
+  <div class="hint" id="pinMsg"></div>
+</section>
+
+<div id="ui" class="hide">
+<header><h1 id="hName">Paparan Masjid</h1><p>Kawalan dari telefon · perubahan terus dipapar di TV</p></header>
+<main>
+  <div class="card">
+    <h2>💰 Tabung Mingguan</h2>
+    <div class="row">
+      <div><label>Kutipan minggu ini (RM)</label><input id="tw" inputmode="decimal" class="tab"></div>
+      <div><label>Minggu lepas (RM)</label><input id="tl" inputmode="decimal" class="tab"></div>
+    </div>
+    <label>Jumlah terkumpul / baki (RM) — kosongkan jika tidak mahu papar</label><input id="tt" inputmode="decimal" class="tab">
+    <label>Nota (cth: No. akaun, tarikh kemas kini)</label><input id="tn">
+    <button class="btn ghost" id="newWeek" style="margin-top:12px;width:100%">Minggu baharu: pindah "minggu ini" ke "minggu lepas"</button>
+  </div>
+
+  <div class="card">
+    <h2>🖼️ Poster Kuliah</h2>
+    <label class="drop">＋ Pilih poster dari galeri<input type="file" id="pFile" accept="image/*" multiple></label>
+    <div class="hint" id="pMsg">Gambar dikecilkan secara automatik sebelum dihantar.</div>
+    <div class="posters" id="posters"></div>
+    <label>Pautan poster dari internet (pilihan, satu URL setiap baris)</label><textarea id="purls" placeholder="https://..."></textarea>
+  </div>
+
+  <div class="card">
+    <h2>📚 Jadual Kuliah</h2>
+    <div id="kul"></div>
+    <button class="btn ghost" id="kAdd" style="margin-top:12px;width:100%">＋ Tambah kuliah</button>
+  </div>
+
+  <div class="card">
+    <h2>📢 Pengumuman (teks bergerak)</h2>
+    <textarea id="tick"></textarea>
+  </div>
+
+  <div class="card">
+    <h2>🕌 Masjid</h2>
+    <label>Nama masjid</label><input id="name">
+    <label>Alamat / lokasi</label><input id="addr">
+    <label>Kod zon JAKIM</label><input id="zone" autocapitalize="characters" placeholder="cth: TRG04, WLY01, SGR01">
+    <div class="hint">Senarai kod zon: e-solat.gov.my</div>
+  </div>
+
+  <div class="card">
+    <h2>⏱️ Azan, Iqamah & Solat</h2>
+    <label>Minit iqamah selepas azan</label>
+    <div class="iq">
+      <div><label>Subuh</label><input id="i0" type="number" inputmode="numeric"></div>
+      <div><label>Zohor</label><input id="i1" type="number" inputmode="numeric"></div>
+      <div><label>Asar</label><input id="i2" type="number" inputmode="numeric"></div>
+      <div><label>Maghrib</label><input id="i3" type="number" inputmode="numeric"></div>
+      <div><label>Isyak</label><input id="i4" type="number" inputmode="numeric"></div>
+    </div>
+    <div class="row">
+      <div><label>Skrin azan (minit)</label><input id="azan" type="number" inputmode="numeric"></div>
+      <div><label>Amaran sebelum waktu (minit)</label><input id="pre" type="number" inputmode="numeric"></div>
+      <div><label>Tempoh solat (minit)</label><input id="solat" type="number" inputmode="numeric"></div>
+      <div><label>Khutbah + solat Jumaat (minit)</label><input id="jumaat" type="number" inputmode="numeric"></div>
+      <div><label>Masa setiap slide (saat)</label><input id="slide" type="number" inputmode="numeric"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🧪 Uji di TV</h2>
+    <div class="actions">
+      <button class="btn gold" id="demo">▶ Tunjuk animasi azan & iqamah (±1 minit)</button>
+      <button class="btn ghost" id="reload">↻ Muat turun semula waktu solat JAKIM</button>
+    </div>
+  </div>
+</main>
+<div class="bar"><button class="btn" id="save">💾 Simpan ke TV</button></div>
+</div>
+<div id="toast"></div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const HARI = ['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'];
+let pin = '', cfg = {};
+
+// The TV's QR code carries the PIN in the address (#pin=123456); keep it and tidy the address bar.
+const m = location.hash.match(/pin=(\d+)/);
+try { pin = m ? m[1] : (localStorage.getItem('pin') || ''); if (m) { localStorage.setItem('pin', pin); history.replaceState(null, '', location.pathname); } } catch (e) { if (m) pin = m[1]; }
+
+async function api(method, path, body, type) {
+  const r = await fetch(path, { method, headers: Object.assign({ 'X-Pin': pin }, type ? { 'Content-Type': type } : {}), body });
+  if (r.status === 401) { showLogin('PIN salah atau sudah bertukar.'); throw new Error('pin'); }
+  if (r.status === 429) { showLogin('Terlalu banyak cubaan. Tunggu 5 minit.'); throw new Error('locked'); }
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const t = r.headers.get('Content-Type') || '';
+  return t.includes('json') ? r.json() : r.text();
+}
+function toast(m) { const t = $('toast'); t.textContent = m; t.style.display = 'block'; clearTimeout(toast.h); toast.h = setTimeout(() => t.style.display = 'none', 3000); }
+function showLogin(msg) { $('ui').classList.add('hide'); $('login').classList.remove('hide'); $('pinMsg').textContent = msg || ''; $('pinIn').value = ''; }
+
+async function load() {
+  const st = await api('GET', '/api/state');
+  cfg = st.config || {};
+  $('login').classList.add('hide'); $('ui').classList.remove('hide');
+  fill(); showPosters(st.posters || []);
+}
+
+/* ---------- form <-> config ---------- */
+const T = { name: 'name', addr: 'addr', zone: 'zone', tick: 'ticker', purls: 'posterUrls', azan: 'azan', pre: 'pre', solat: 'solat', jumaat: 'jumaat', slide: 'slide' };
+function fill() {
+  $('hName').textContent = cfg.name || 'Paparan Masjid';
+  for (const id in T) $(id).value = cfg[T[id]] ?? '';
+  (cfg.iqamah || []).forEach((n, i) => $('i' + i).value = n);
+  const tb = cfg.tabung || {};
+  $('tw').value = tb.week || ''; $('tl').value = tb.last || ''; $('tt').value = tb.total || ''; $('tn').value = tb.note || '';
+  $('kul').innerHTML = '';
+  (cfg.kuliah || '').split('\n').map(l => l.split('|').map(x => x.trim())).filter(r => r[0]).forEach(addKuliah);
+}
+function collect() {
+  const num = (id, d) => { const n = parseInt($(id).value); return isNaN(n) || n < 0 ? d : n; };
+  const c = Object.assign({}, cfg);
+  for (const id of ['name', 'addr', 'tick', 'purls']) c[T[id]] = $(id).value.trim();
+  c.zone = $('zone').value.trim().toUpperCase() || cfg.zone;
+  for (const id of ['azan', 'pre', 'solat', 'jumaat', 'slide']) c[id] = num(id, cfg[id]);
+  c.iqamah = [0, 1, 2, 3, 4].map(i => num('i' + i, (cfg.iqamah || [])[i] || 5));
+  c.tabung = { week: $('tw').value.trim(), last: $('tl').value.trim(), total: $('tt').value.trim(), note: $('tn').value.trim() };
+  c.kuliah = [...$('kul').children].map(k => [...k.querySelectorAll('[data-f]')].map(e => e.value.replace(/\|/g, '/').trim()))
+    .filter(r => r[2] || r[3]).map(r => r.join(' | ')).join('\n');
+  return c;
+}
+
+function addKuliah(r) {
+  r = r || ['Isnin', 'Selepas Maghrib', '', ''];
+  const d = document.createElement('div');
+  d.className = 'k';
+  const days = HARI.map(h => `<option${h.toLowerCase() === (r[0] || '').toLowerCase() ? ' selected' : ''}>${h}</option>`).join('');
+  d.innerHTML = `<button class="x" title="Buang">✕</button>
+    <div class="row"><div><label>Hari</label><select data-f>${days}</select></div><div><label>Masa</label><input data-f></div></div>
+    <label>Tajuk</label><input data-f><label>Penceramah</label><input data-f>`;
+  const f = d.querySelectorAll('input[data-f]');
+  f[0].value = r[1] || ''; f[1].value = r[2] || ''; f[2].value = r[3] || '';
+  d.querySelector('.x').onclick = () => d.remove();
+  $('kul').appendChild(d);
+}
+
+/* ---------- posters ---------- */
+function showPosters(names) {
+  $('posters').innerHTML = '';
+  for (const n of names) {
+    const d = document.createElement('div');
+    d.className = 'p';
+    d.innerHTML = `<img loading="lazy" alt=""><button class="x" title="Padam">✕</button>`;
+    d.querySelector('img').src = '/poster/' + encodeURIComponent(n);
+    d.querySelector('.x').onclick = async () => {
+      if (!confirm('Padam poster ini dari TV?')) return;
+      await api('DELETE', '/api/poster?name=' + encodeURIComponent(n));
+      d.remove(); toast('Poster dipadam');
+    };
+    $('posters').appendChild(d);
+  }
+}
+// Phone photos are several MB; the TV only needs about 1920 px.
+function shrink(file) {
+  return new Promise((ok, bad) => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const k = Math.min(1, 1920 / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob(b => b ? ok(b) : bad(new Error('gagal')), 'image/jpeg', .85);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); bad(new Error('bukan gambar')); };
+    img.src = url;
+  });
+}
+$('pFile').onchange = async e => {
+  const files = [...e.target.files];
+  e.target.value = '';
+  let done = 0;
+  for (const f of files) {
+    $('pMsg').textContent = `Menghantar ${done + 1}/${files.length}…`;
+    try {
+      const blob = await shrink(f);
+      const base = (f.name.replace(/\.[^.]+$/, '') || 'poster').replace(/[^A-Za-z0-9_-]/g, '_').slice(0, 40);
+      await api('POST', '/api/poster?name=' + encodeURIComponent(base + '.jpg'), blob, 'image/jpeg');
+      done++;
+    } catch (err) { if (err.message === 'pin') return; toast(f.name + ': ' + err.message); }
+  }
+  $('pMsg').textContent = done ? `${done} poster dihantar ✓ — keluar di TV dalam 1–2 minit.` : 'Tiada poster dihantar.';
+  showPosters((await api('GET', '/api/state')).posters || []);
+};
+
+/* ---------- buttons ---------- */
+$('kAdd').onclick = () => { addKuliah(); $('kul').lastChild.querySelector('input').focus(); };
+$('newWeek').onclick = () => {
+  if (!$('tw').value.trim()) return toast('Kutipan minggu ini masih kosong');
+  $('tl').value = $('tw').value; $('tw').value = ''; $('tw').focus();
+  toast('Isi kutipan minggu baharu, kemudian Simpan');
+};
+$('save').onclick = async () => {
+  $('save').disabled = true;
+  try { cfg = collect(); await api('POST', '/api/config', JSON.stringify(cfg), 'application/json'); $('hName').textContent = cfg.name; toast('Disimpan ✓ TV sudah dikemas kini'); }
+  catch (e) { if (e.message !== 'pin') toast('Gagal simpan: ' + e.message); }
+  $('save').disabled = false;
+};
+$('demo').onclick = () => api('POST', '/api/demo').then(() => toast('Lihat TV — demo bermula')).catch(() => {});
+$('reload').onclick = () => api('POST', '/api/reload').then(() => toast('TV sedang muat turun waktu solat')).catch(() => {});
+$('pinGo').onclick = () => {
+  pin = $('pinIn').value.trim();
+  try { localStorage.setItem('pin', pin); } catch (e) {}
+  load().catch(e => { if (e.message !== 'pin') $('pinMsg').textContent = 'Tidak dapat sambung ke TV: ' + e.message; });
+};
+$('pinIn').onkeydown = e => { if (e.key === 'Enter') $('pinGo').click(); };
+
+if (pin) load().catch(e => { if (e.message !== 'pin') showLogin('Tidak dapat sambung ke TV: ' + e.message); });
+else showLogin();
+</script>
+</body>
+</html>
