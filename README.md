@@ -2,7 +2,34 @@
 
 Dicipta oleh **Pokka99**. Lesen [Apache 2.0](LICENSE): bebas diguna dan diubah suai, tetapi fail [NOTICE](NOTICE) (kredit pencipta) mesti dikekalkan dalam setiap salinan dan fork.
 
+<p align="center">
+  <img src="docs/screenshots/01-gambar.jpg" width="32%" alt="Slide gambar masjid: jam emas, tarikh Masihi dan Hijrah, lima waktu solat dan ayat Al-Quran">
+  <img src="docs/screenshots/08-azan.jpg" width="32%" alt="Skrin azan: Telah masuk waktu Asar">
+  <img src="docs/screenshots/10-saf.jpg" width="32%" alt="Minit terakhir iqamah: luruskan dan rapatkan saf">
+</p>
+
+**[⬇ Muat turun APK terkini](https://github.com/Pokka99/Masjid-TV/releases/latest)**
+
 Skrin paparan masjid untuk TV Android, satu fail `app/src/main/assets/index.html` dibungkus dalam WebView.
+
+## Pratonton
+
+| | |
+|---|---|
+| ![Slide gambar masjid skrin penuh dengan jam emas, tarikh, lima waktu solat, kiraan ke Maghrib dan ayat](docs/screenshots/01-gambar.jpg) | ![Skrin utama: tarikh Hijrah, solat seterusnya dengan kiraan detik, dan baris tujuh waktu solat](docs/screenshots/02-utama.jpg) |
+| *Slide gambar masjid, bergilir 13 gambar* | *Skrin utama dengan tarikh Hijrah* |
+| ![Jadual kuliah minggu ini dengan kuliah hari ini ditanda](docs/screenshots/03-kuliah.jpg) | ![Kutipan tabung minggu ini RM 1,250.50 berbanding minggu lepas](docs/screenshots/04-tabung.jpg) |
+| *Jadual kuliah, kuliah hari ini ditanda* | *Kutipan tabung mingguan* |
+| ![Poster kuliah Tafsir Surah Al-Kahfi sebagai slide](docs/screenshots/05-poster.jpg) | ![Slide ayat Al-Quran Al-Baqarah 2:152 dengan fon Amiri Quran dan terjemahan](docs/screenshots/06-ayat.jpg) |
+| *Poster kuliah dari telefon atau pendrive* | *Ayat Al-Quran dengan terjemahan* |
+| ![Kiraan 60 saat: Sebentar lagi masuk waktu Asar](docs/screenshots/07-sebentar.jpg) | ![Skrin azan: Telah masuk waktu Asar, hayya 'alas-solah](docs/screenshots/08-azan.jpg) |
+| *60 saat sebelum masuk waktu* | *Skrin azan bila masuk waktu* |
+| ![Cincin kiraan iqamah 03:30](docs/screenshots/09-iqamah.jpg) | ![Minit terakhir iqamah berwarna jingga dengan barisan saf](docs/screenshots/10-saf.jpg) |
+| *Kiraan iqamah* | *Minit terakhir: luruskan dan rapatkan saf* |
+| ![Skrin gelap: Solat Asar sedang berlangsung, matikan telefon](docs/screenshots/11-solat.jpg) | ![Panel Tetapan di TV dengan kod QR dan PIN untuk telefon](docs/screenshots/12-tetapan.jpg) |
+| *Solat sedang berlangsung* | *Tetapan di TV, dengan QR untuk telefon* |
+
+<p align="center"><img src="docs/screenshots/13-telefon.jpg" width="300" alt="Halaman kawalan di telefon: tabung, poster, jadual kuliah"><br><em>Kawalan dari telefon</em></p>
 
 ## Fungsi
 - **Waktu solat JAKIM** (e-Solat, ikut kod zon) — dimuat turun setahun sekali, simpan dalam TV, tetap jalan jika internet putus.
@@ -46,7 +73,7 @@ Atau salin `dist/PaparanMasjid.apk` ke pendrive dan pasang guna file manager di 
 export JAVA_HOME=~/glass-tv-sdk/jdk-17.0.20.1+1/Contents/Home ANDROID_HOME=~/glass-tv-sdk/sdk
 ./gradlew assembleRelease && cp app/build/outputs/apk/release/app-release.apk dist/PaparanMasjid.apk
 ```
-Uji di browser: buka `index.html?now=2026-10-22T16:12:00` untuk lompat ke masa tertentu, atau `index.html?demo=1` untuk demo animasi (±1 minit).
+Uji di browser: buka `index.html?now=2026-10-22T16:12:00` untuk lompat ke masa tertentu, atau `index.html?demo=1` untuk demo animasi (±1 minit), atau `index.html?slide=kuliah` untuk kekal pada satu slide (`scene`, `date`, `kuliah`, `poster`, `tabung`, `ayat`).
 
 ## Kredit
 - Waktu solat & tarikh Hijrah: [JAKIM e-Solat](https://www.e-solat.gov.my).

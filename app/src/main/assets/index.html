@@ -51,14 +51,14 @@ main{display:grid;grid-template-columns:1fr 30vw;gap:1.6vw;min-height:0}
 .s-date .ha{font-size:6vh;color:var(--gold);margin-top:1vh}
 .s-date .gm{font-size:3.2vh;color:var(--mute);margin-top:3vh;padding-top:2vh;border-top:1px solid var(--line);min-width:50%}
 
-.s-kuliah{justify-content:flex-start;padding-top:7.5vh}
-.s-kuliah h2{font-size:4.2vh;color:var(--gold);margin-bottom:2vh}
-.kl{display:flex;flex-direction:column;gap:1.4vh}
-.kr{display:grid;grid-template-columns:16vw 1fr;gap:1.5vw;align-items:center;padding:1.1vh 1.5vw;border-radius:1.4vh;background:rgba(0,0,0,.18)}
+.s-kuliah{justify-content:flex-start;padding-top:6.5vh;padding-bottom:5vh}
+.s-kuliah h2{font-size:4vh;color:var(--gold);margin-bottom:1.5vh}
+.kl{display:flex;flex-direction:column;gap:1vh}
+.kr{display:grid;grid-template-columns:16vw 1fr;gap:1.5vw;align-items:center;padding:.9vh 1.5vw;border-radius:1.4vh;background:rgba(0,0,0,.18)}
 .kr.today{background:linear-gradient(90deg,rgba(227,193,90,.25),rgba(227,193,90,.05));border:1px solid var(--gold)}
-.kr .k1{font-size:2.8vh;font-weight:700}.kr .k1 span{display:block;font-size:2vh;color:var(--mute);font-weight:400}
-.kr .k2{font-size:3vh;font-weight:600}.kr .k2 span{display:block;font-size:2.2vh;color:var(--gold);font-weight:400;margin-top:.4vh}
-.kr .badge{font-size:1.6vh;background:var(--gold);color:#1a1a1a;padding:.2vh .6vw;border-radius:1vh;margin-left:.6vw;vertical-align:middle}
+.kr .k1{font-size:2.6vh;font-weight:700}.kr .k1 .ms{display:block;font-size:1.9vh;color:var(--mute);font-weight:400}
+.kr .k2{font-size:2.7vh;font-weight:600}.kr .k2 span{display:block;font-size:2vh;color:var(--gold);font-weight:400;margin-top:.2vh}
+.kr .badge{display:inline-block;font-size:1.5vh;font-weight:700;letter-spacing:.05em;background:var(--gold);color:#1a1a1a;padding:.2vh .6vw;border-radius:1vh;margin-left:.6vw;vertical-align:middle}
 
 .s-tabung{text-align:center;align-items:center}
 .s-tabung .lbl{font-size:2.6vh;color:var(--mute);letter-spacing:.15em;text-transform:uppercase}
@@ -153,6 +153,9 @@ aside{display:flex;flex-direction:column;gap:1.6vh;min-height:0}
 .sc-cap small{display:block;font-size:1.5vh;color:rgba(255,255,255,.5);margin-top:.3vh}
 .sc-name{position:absolute;left:3vw;top:3.5vh;font-family:Roboto,system-ui,sans-serif;font-size:2.4vh;color:var(--gold);letter-spacing:.12em;text-transform:uppercase}
 
+/* ?still=1: no motion, for screenshots */
+.still *,.still *::before,.still *::after{animation:none!important;transition:none!important}
+
 /* full overlays */
 .ov{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:20;overflow:hidden;
   background:radial-gradient(circle at 50% 45%,#17704f,#062a20 70%)}
@@ -202,7 +205,7 @@ aside{display:flex;flex-direction:column;gap:1.6vh;min-height:0}
 #iq.saf .cd{color:var(--warn)}
 #iq.saf .glow{box-shadow:0 0 8vh rgba(233,162,59,.5)}
 .saf-row{display:flex;gap:1.4vw;margin-top:2vh;height:9vh}
-.saf-row svg{width:5vh;height:9vh;fill:var(--warn);opacity:0;animation:rise .6s both}
+.saf-row svg{width:5vh;height:9vh;fill:var(--warn);animation:rise .6s both}
 #soon .cd{font-size:16vh}
 #solat{background:#020c08}
 #solat .o2{font-size:8vh}
@@ -481,6 +484,7 @@ const q = new URLSearchParams(location.search);
 const OFFSET = q.get('now') ? new Date(q.get('now')).getTime() - Date.now() : 0;
 let DEMO = 0;   // extra shift used by demo()
 const now = () => new Date(Date.now() + OFFSET + DEMO);
+if (q.has('still')) document.documentElement.classList.add('still');
 const pad = n => String(n).padStart(2, '0');
 const dkey = d => `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()}`;
 
@@ -746,7 +750,7 @@ function renderDay(t) {
   rows.sort((a, b) => order(a) - order(b));
   $('kl').innerHTML = rows.slice(0, 5).map(r => {
     const tod = r[0].toLowerCase() === todayName;
-    return `<div class="kr${tod ? ' today' : ''}"><div class="k1">${esc(r[0])}${tod ? '<span class="badge">HARI INI</span>' : ''}<span>${esc(r[1] || '')}</span></div>` +
+    return `<div class="kr${tod ? ' today' : ''}"><div class="k1">${esc(r[0])}${tod ? '<span class="badge">HARI INI</span>' : ''}<span class="ms">${esc(r[1] || '')}</span></div>` +
       `<div class="k2">${esc(r[2] || '')}<span>${esc(r[3] || '')}</span></div></div>`;
   }).join('') || '<div class="kr"><div class="k2">Tiada kuliah dijadualkan</div></div>';
 
@@ -785,7 +789,10 @@ function nextSlide() {
   si++;
   if (si >= seq.length) {
     loadPosters();
-    seq = CYCLE.filter(k => k !== 'poster' || posters.length);
+    // ?slide=kuliah holds one slide, for previews and screenshots
+    const only = q.get('slide');
+    seq = (only && CYCLE.includes(only) ? [only] : CYCLE).filter(k => k !== 'poster' || posters.length);
+    if (!seq.length) seq = CYCLE.filter(k => k !== 'poster');
     $('dots').innerHTML = seq.map(() => '<i></i>').join('');
     si = 0;
   }
