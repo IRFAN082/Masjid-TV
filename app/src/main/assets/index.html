@@ -117,6 +117,17 @@ aside{display:flex;flex-direction:column;gap:1.6vh;min-height:0}
 .ticker span{display:inline-block;padding-left:100%;animation:tick 40s linear infinite}
 @keyframes tick{to{transform:translateX(-100%)}}
 
+/* landscape poster, full screen */
+#pfull{position:fixed;inset:0;z-index:15;background:#000;opacity:0;visibility:hidden;transition:opacity 1s,visibility 0s 1s;
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+#pfull.on{opacity:1;visibility:visible;transition:opacity 1s}
+#pfull .pbg{position:absolute;inset:-6%;background-size:cover;background-position:center;filter:blur(3vh) brightness(.35)}
+#pfull img{position:relative;max-width:100%;max-height:100%;object-fit:contain}
+.pf-chip{position:absolute;top:2.5vh;right:2vw;display:flex;align-items:center;gap:1vw;background:rgba(6,42,32,.82);
+  border:1px solid var(--line);border-radius:1.5vh;padding:.8vh 1.4vw;font-size:2.4vh;color:var(--mute)}
+.pf-chip b{font-size:3.4vh;color:var(--text);font-variant-numeric:tabular-nums}
+.pf-chip span b{font-size:2.6vh;color:var(--gold)}
+
 /* full-screen photo slide */
 #scene{position:fixed;inset:0;z-index:15;opacity:0;visibility:hidden;transition:opacity 1.2s,visibility 0s 1.2s;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:9vh;font-family:Georgia,"Noto Serif",serif;background:radial-gradient(circle at 50% 40%,#17704f,#062a20 75%)}
@@ -293,6 +304,10 @@ aside{display:flex;flex-direction:column;gap:1.6vh;min-height:0}
   <div class="ticker"><span id="tick"></span></div>
 </div>
 
+<div id="pfull">
+  <div class="pbg" id="pfBg"></div><img id="pfImg" alt="">
+  <div class="pf-chip"><b id="pfClock"></b><span id="pfNext"></span></div>
+</div>
 <div id="scene">
   <div class="bg" id="scBg"></div><div class="shade"></div>
   <div class="sc-name" id="scName"></div>
@@ -378,7 +393,7 @@ aside{display:flex;flex-direction:column;gap:1.6vh;min-height:0}
     <div><label>Jumlah terkumpul / baki tabung (RM, kosongkan jika tidak mahu papar)</label><input id="fTT" inputmode="decimal"></div>
     <div><label>Nota tabung (cth: No. akaun / tarikh kemas kini)</label><input id="fTN"></div>
     <div class="full"><label>Jadual kuliah — satu baris setiap kuliah: Hari | Masa | Tajuk | Penceramah</label><textarea id="fKul"></textarea></div>
-    <div class="full"><label>Pautan poster dari internet (pilihan, satu URL gambar setiap baris). Poster dalam folder "Poster" di TV/pendrive dipapar secara automatik.</label><textarea id="fPost" style="height:8vh"></textarea></div>
+    <div class="full"><label>Pautan poster dari internet (pilihan, satu URL gambar setiap baris). Poster dalam folder "Poster" di TV/pendrive dipapar secara automatik. Saiz: potret 1080×1350, landskap 1920×1080 (skrin penuh).</label><textarea id="fPost" style="height:8vh"></textarea></div>
     <div class="full"><label>Teks bergerak (pengumuman)</label><input id="fTick"></div>
   </div>
   <div class="btns"><button class="p" id="bSave">Simpan</button><button id="bReload">Muat semula waktu solat</button><button id="bClose">Tutup</button></div>
@@ -653,6 +668,11 @@ function render(force) {
   }
   renderTimes(s, t);
   if ($('scene').classList.contains('on')) renderScene(s, t);
+  if ($('pfull').classList.contains('on') && s.next) {
+    $('pfClock').textContent = hm(t);
+    const m = Math.max(0, Math.ceil((s.next.t - t) / 60e3));
+    $('pfNext').innerHTML = `${s.next.n} <b>${hm(s.next.t)}</b> · ${m >= 60 ? Math.floor(m / 60) + ' j ' : ''}${m % 60} min`;
+  }
   if (s.next) {
     const left = s.next.t - t;
     $('nL').textContent = 'Solat Seterusnya';
@@ -808,7 +828,17 @@ function nextSlide() {
     $('pImg').onerror = () => { clearTimeout(slideTimer); slideTimer = setTimeout(nextSlide, 300); };
     $('pImg').src = src;
     $('pBg').style.backgroundImage = `url("${src.replace(/"/g, '%22')}")`;
+    // A landscape poster would be small in the box, so it takes the whole screen instead.
+    const probe = new Image();
+    probe.onload = () => {
+      if (seq[si] !== 'poster' || probe.naturalWidth / probe.naturalHeight < 1.2) return;
+      $('pfImg').src = src; $('pfBg').style.backgroundImage = $('pBg').style.backgroundImage;
+      $('pfull').classList.add('on');
+      render();
+    };
+    probe.src = src;
   }
+  $('pfull').classList.remove('on');
   if (k === 'scene') { prepareScene(); renderScene(state(now()), now()); }
   $('scene').classList.toggle('on', k === 'scene');
   if (k !== 'scene') for (const key in slides) slides[key].classList.toggle('on', key === k);

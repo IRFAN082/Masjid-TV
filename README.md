@@ -55,7 +55,16 @@ Tekan **MENU** (atau **OK 3 kali** dengan cepat). ▲▼ untuk bergerak, OK untu
 Boleh ubah: nama masjid, zon JAKIM, minit iqamah, tempoh solat, kutipan tabung, jadual kuliah, teks bergerak.
 
 ## Tambah poster kuliah
-Simpan gambar (JPG/PNG, sebaiknya potret 4:5 atau landskap 16:9) dalam folder bernama **`Poster`**. Ada 3 cara:
+Saiz poster terbaik:
+
+| Bentuk | Saiz | Cara dipapar | Di Canva |
+|---|---|---|---|
+| Potret | **1080 × 1350** (4:5) | Dalam kotak slide, waktu solat kekal kelihatan | "Instagram Post (4:5)" |
+| Landskap | **1920 × 1080** (16:9) | **Skrin penuh**, dengan cip jam dan solat seterusnya di penjuru | "Presentation (16:9)" |
+
+Saiz lain juga boleh — poster dimuatkan tanpa dipotong, dan ruang kosong diisi latar kabur daripada poster itu sendiri.
+
+Simpan gambar (JPG/PNG) dalam folder bernama **`Poster`**. Ada 3 cara:
 1. **Pendrive** — buat folder `Poster` dalam pendrive, masukkan poster, cucuk ke TV. Cabut pendrive = poster hilang dari slide.
 2. **Dari komputer (Wi-Fi)** — `./poster.sh <IP-TV> poster1.jpg poster2.jpg`; `--senarai` untuk lihat, `--padam-semua` untuk buang.
 3. **Pautan internet** — dalam Tetapan, isi "Pautan poster" (satu URL gambar setiap baris).
