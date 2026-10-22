@@ -1,0 +1,16 @@
+Masjid TV
+Copyright 2026 Pokka99 (https://github.com/Pokka99/Masjid-TV)
+
+Masjid TV dicipta oleh Pokka99. Di bawah Apache License 2.0, sesiapa yang
+mengedar salinan atau versi ubah suai mesti mengekalkan notis ini dan
+menyatakan fail yang telah diubah.
+
+Masjid TV was created by Pokka99. Under the Apache License 2.0, anyone who
+distributes a copy or a modified version must keep this notice and state
+which files they changed.
+
+Bahan pihak ketiga (lesen masing-masing):
+- Amiri Quran font, SIL Open Font License 1.1 (app/src/main/assets/fonts/AMIRI-LICENSE-OFL.txt)
+- qrcode-generator oleh Kazuhiko Arase, MIT License (app/src/main/assets/qrcode.min.js)
+- Gambar masjid dari Wikimedia Commons, lesen setiap gambar dalam
+  app/src/main/assets/masjid/captions.json

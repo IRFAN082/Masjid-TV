@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- Masjid TV — Copyright 2026 Pokka99 — Apache License 2.0 (see LICENSE and NOTICE) -->
 <html lang="ms">
 <head>
 <meta charset="utf-8">
@@ -230,6 +231,8 @@ aside{display:flex;flex-direction:column;gap:1.6vh;min-height:0}
 #set .qr{background:#fff;padding:.8vh;border-radius:1vh;flex:none;width:18vh;height:18vh}
 #set .qr svg{width:100%;height:100%;display:block}
 #set .msg{margin-top:1.5vh;font-size:2.2vh;color:var(--gold);min-height:3vh}
+#set .credit{margin-top:3vh;padding-top:1.5vh;border-top:1px solid #2b5a49;font-size:1.8vh;color:var(--mute)}
+#set .credit b{color:var(--gold)}
 #toast{position:fixed;left:50%;bottom:8vh;transform:translateX(-50%);background:#000c;color:var(--text);padding:1.2vh 2vw;border-radius:1vh;font-size:2.2vh;z-index:60;display:none}
 </style>
 </head>
@@ -377,6 +380,7 @@ aside{display:flex;flex-direction:column;gap:1.6vh;min-height:0}
   </div>
   <div class="btns"><button class="p" id="bSave">Simpan</button><button id="bReload">Muat semula waktu solat</button><button id="bClose">Tutup</button></div>
   <div class="msg" id="setMsg"></div>
+  <div class="credit">Masjid TV oleh <b>Pokka99</b> · github.com/Pokka99/Masjid-TV</div>
 </div>
 <div id="toast"></div>
 

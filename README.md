@@ -1,5 +1,7 @@
 # Masjid TV — Paparan Masjid (Android TV)
 
+Dicipta oleh **Pokka99**. Lesen [Apache 2.0](LICENSE): bebas diguna dan diubah suai, tetapi fail [NOTICE](NOTICE) (kredit pencipta) mesti dikekalkan dalam setiap salinan dan fork.
+
 Skrin paparan masjid untuk TV Android, satu fail `app/src/main/assets/index.html` dibungkus dalam WebView.
 
 ## Fungsi

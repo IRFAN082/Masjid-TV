@@ -1,3 +1,4 @@
+// Masjid TV — Copyright 2026 Pokka99 — Apache License 2.0 (see LICENSE and NOTICE)
 package my.masjid.tv;
 
 import android.content.Context;
