@@ -405,6 +405,18 @@ aside{display:flex;flex-direction:column;gap:1.6vh;min-height:0}
 <script src="qrcode.min.js"></script>
 <script>
 'use strict';
+  // --- SOKONGAN UNTUK ANDROID 7 (WEBVIEW LAMA) ---
+if (!String.prototype.padStart) {
+  String.prototype.padStart = function(len, str) {
+    str = String(str !== undefined ? str : ' ');
+    var s = String(this);
+    while (s.length < len) s = str + s;
+    return s;
+  };
+}
+if (!NodeList.prototype.forEach) {
+  NodeList.prototype.forEach = Array.prototype.forEach;
+}
 /* ---------- data ---------- */
 const DEF = {
   name: 'Masjid Al-Hidayah', addr: 'Dungun, Terengganu', zone: 'TRG04',
@@ -500,38 +512,38 @@ const OFFSET = q.get('now') ? new Date(q.get('now')).getTime() - Date.now() : 0;
 let DEMO = 0;   // extra shift used by demo()
 const now = () => new Date(Date.now() + OFFSET + DEMO);
 if (q.has('still')) document.documentElement.classList.add('still');
-const pad = n => String(n).padStart(2, '0');
+const pad = n => (n < 10 ? '0' : '') + n;
 const dkey = d => `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()}`;
 
 /* ---------- prayer times (JAKIM e-Solat) ---------- */
 let year = store.get('year', null);        // {zone, y, days:{'22-10-2026':{...}}}
 let lastTry = 0;
 
-async function fetchYear(force) {
+function fetchYear(force) {
   lastTry = Date.now();
   const url = 'https://www.e-solat.gov.my/index.php?r=esolatApi/TakwimSolat&period=year&zone=' + encodeURIComponent(cfg.zone);
-  try {
-    const r = await fetch(url, { cache: 'no-store' });
-    const j = await r.json();
-    if (!j.prayerTime || !j.prayerTime.length) throw new Error(j.status || 'tiada data');
-    const days = {};
-    for (const p of j.prayerTime) {
-      const [d, m, y] = p.date.split('-');
-      const mi = BLN3[m.slice(0, 3).toLowerCase()];
-      if (mi === undefined) continue;
-      days[`${pad(+d)}-${pad(mi + 1)}-${y}`] = p;
-    }
-    year = { zone: cfg.zone, y: now().getFullYear(), days, at: Date.now() };
-    store.set('year', year);
-    if (force) toast('Waktu solat dikemas kini · ' + Object.keys(days).length + ' hari');
-    render(true);
-    return true;
-  } catch (e) {
-    if (force) toast('Gagal ambil waktu solat: ' + e.message);
-    return false;
-  }
+  return fetch(url, { cache: 'no-store' })
+    .then(r => r.json())
+    .then(j => {
+      if (!j.prayerTime || !j.prayerTime.length) throw new Error(j.status || 'tiada data');
+      const days = {};
+      for (const p of j.prayerTime) {
+        const [d, m, y] = p.date.split('-');
+        const mi = BLN3[m.slice(0, 3).toLowerCase()];
+        if (mi === undefined) continue;
+        days[`${pad(+d)}-${pad(mi + 1)}-${y}`] = p;
+      }
+      year = { zone: cfg.zone, y: now().getFullYear(), days, at: Date.now() };
+      store.set('year', year);
+      if (force) toast('Waktu solat dikemas kini · ' + Object.keys(days).length + ' hari');
+      render(true);
+      return true;
+    })
+    .catch(e => {
+      if (force) toast('Gagal ambil waktu solat: ' + e.message);
+      return false;
+    });
 }
-
 function dayData(d) {
   if (!year || year.zone !== cfg.zone) return null;
   return year.days[dkey(d)] || null;
